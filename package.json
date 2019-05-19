@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "angular": "~1.4",
+    "angular-drag-and-drop-lists": "^2.1.0",
     "angular-promise-tracker": "^2.2.2",
     "billboard.js": "^1.6.2",
     "bootstrap": "^4.1.3",

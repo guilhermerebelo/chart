@@ -1,12 +1,6 @@
 'use strict';
 
-require('../node_modules/d3-selection/src/selection/style.js');
-require('../node_modules/billboard.js/dist/billboard.css');
-
-var d3 = require('d3');
-var $ = require('jQuery');
-var moment = require('moment');
-var billboard = require('billboard.js').bb;
+var _ = require('lodash');
 
 module.exports = ComponenteModeloDirective;
 
@@ -18,70 +12,101 @@ function ComponenteModeloDirective() {
         template: require('./componente-modelo.directive.html'),
         scope: {},
         controller: ComponenteModeloController,
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        link: function(scope, el, attrs, controller) {
+
+        }
     };
 }
 
-ComponenteModeloController.$inject = ['pes-commponente.pes-componente.Service', 'promiseTracker'];
-function ComponenteModeloController(Service, promiseTracker) {
+var MODEL = {
+    LIST_LEFT: {
+        list: [],
+        isSelectAll: false
+    },
+    LIST_RIGHT: {
+        list: [],
+        isSelectAll: false
+    }
+}
+
+var OTHER_TYPE_LIST = {
+    LIST_LEFT: 'LIST_RIGHT',
+    LIST_RIGHT: 'LIST_LEFT'
+}
+
+var DEFAULT_LIST_STARTER = 'LIST_LEFT';
+
+ComponenteModeloController.$inject = ['pes-commponente.pes-componente.Service', 'promiseTracker', '$scope'];
+function ComponenteModeloController(Service, promiseTracker, $scope) {
     var vm = this;
     vm.loadingTracker = promiseTracker();
 
-    get();
+    load();
 
-    function get() {
-        var promise = Service.get(500).then(setChar);
-        vm.loadingTracker.addPromise(promise);
-    }
+    vm.items = MODEL;
 
-    function setChar(value) {
-        var bb = billboard.generate({
-            bindto: $('.chart')[0],
-            data: {
-                x: "month",
-                columns: [['month', 1, 2, 3, 4, 5, 6, 7], ['folha', 30, 35, 34, 40, 80, 64, 50]]
-            },
-            grid: {
-                y: {
-                    show: true
-                }
-            },
-            point: {
-                type: "rectangle"
-            },
-            legend: {
-                usePoint: true
-            },
-            tooltip: {
-                format: {
-                    title: function (d) {
-                        return moment().month(d).format('MMM');
-                    },
-                    value: function (value, ratio, id) {
-                        var format = d3.format(",.2f");
-                        return format(value);
-                    }
-                }
-            },
-            axis: {
-                y: {
-                    tick: {
-                        format: function (x) {
-                            return "R$ " + d3.format(",.2f")(x);
-                        }
-                    }
-                },
-                x: {
-                    tick: {
-                        format: function (x) {
-                            return moment().month(x).format('MMM');
-                        }
-                    }
-                    
-                }
-            },
+    vm.toggleAll = toggleAll;
+    vm.distribute = distribute;
+    vm.setCheckboxSelectAll = setCheckboxSelectAll;
+    vm.submitSingle = submitSingle;
+
+    function setCheckboxSelectAll(type) {
+        var selecionados = _.filter(vm.items[type].list, function(item) {
+            return item.$$selected;
         })
 
-        bb.resize({ height: 450, width: 600 })
+        vm.items[type].isSelectAll = 
+            selecionados.length === vm.items[type].list.length;
     }
+
+    function load() {
+        Service.get(1).then(onLoad);
+    }
+
+    function onLoad(data) {
+        vm.items[DEFAULT_LIST_STARTER].list = data;
+    }
+
+    function toggleAll(typeList) {
+        _.forEach(vm.items[typeList].list, function(item) {
+            item.$$selected = vm.items[typeList].isSelectAll;
+        })
+    }
+    
+    function distribute(typeList) {
+        var otherTypeList = OTHER_TYPE_LIST[typeList];
+
+        var thisList = [];
+        var otherList = [];
+
+        _.forEach(vm.items[typeList].list, function(item) {
+            item.$$selected ? otherList.push(item) : thisList.push(item);
+            item.$$selected = false;
+        })
+        
+        setDefaltCheckboxList();
+
+        vm.items[typeList].list = thisList;
+        vm.items[otherTypeList].list = vm.items[otherTypeList].list.concat(otherList);54
+    }
+
+    function setDefaltCheckboxList() {
+        vm.items['LIST_LEFT'].isSelectAll = false;
+        vm.items['LIST_RIGHT'].isSelectAll = false;
+    }
+
+    function submitSingle(item, index, type) {
+        var item = vm.items[type].list[index];
+        item.$$selected = false;
+
+        vm.items[type].list.splice(index, 1);
+        vm.items[OTHER_TYPE_LIST[type]].list.push(item);
+    }
+
+
+    $scope.getSelectedItemsIncluding = function(list, item) {
+        item.selected = true;
+        return list.items.filter(function(item) { return item.selected; });
+    };
 }

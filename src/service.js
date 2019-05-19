@@ -1,6 +1,47 @@
 'use strict'
 
-var DATA = ['folha', 30, 35, 34, 40, 80, 64, 50];
+var DATA = [
+    {
+        cidade: "Criciúma",
+        estado: "Santa Catarina",
+        pais: "Brasil"
+    },
+    {
+        cidade: "Tubarão",
+        estado: "Santa Catarina",
+        pais: "Brasil"
+    },
+    {
+        cidade: "Laguna",
+        estado: "Santa Catarina",
+        pais: "Brasil"
+    },
+    {
+        cidade: "Florinópolis",
+        estado: "Santa Catarina",
+        pais: "Brasil"
+    },
+    {
+        cidade: "Joiville",
+        estado: "Santa Catarina",
+        pais: "Brasil"
+    },
+    {
+        cidade: "Chapecó",
+        estado: "Santa Catarina",
+        pais: "Brasil"
+    },
+    {
+        cidade: "New york",
+        estado: "New York",
+        pais: "Estados Unidos da américa"
+    },
+    {
+        cidade: "Porto Alegre",
+        estado: "Rio Grande do Sul",
+        pais: "Brasil"
+    }
+];
 
 module.exports = Service;
 
