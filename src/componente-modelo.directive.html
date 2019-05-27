@@ -1,54 +1,68 @@
+<button class="" ng-click="vm.teste()">add</button>
 <div class="row">
     <div class="col-md-6">
         <table class="table">
-            <tr>
-                <th>
-                    <input type="checkbox" ng-model="vm.items['LIST_LEFT'].isSelectAll" ng-click="vm.toggleAll('LIST_LEFT')">
-                </th>
-                <th>Cidade</th>
-                <th>Estado</th>
-                <th>Pais</th>
-                <th>Botão enviar</th>
-            </tr>
-            <tr ng-repeat="item in vm.items['LIST_LEFT'].list">
-                <td>
-                    <input type="checkbox" name="listLeft" id="chk-{{$index}}" ng-model="item.$$selected" ng-change="vm.setCheckboxSelectAll('LIST_LEFT')">
-                </td>
-                <td>{{item.cidade}}</td>
-                <td>{{item.estado}}</td>
-                <td>{{item.pais}}</td>
-                <th>
-                    <button class="btn btn-default" ng-click="vm.submitSingle(item, $index, 'LIST_LEFT')">-></button>
-                </th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" ng-model="vm.items['LIST_LEFT'].isSelectAll" ng-click="vm.toggleAll('LIST_LEFT')">
+                    </th>
+                    <th style="width: 150px">Cidade</th>
+                    <th>Estado</th>
+                    <th>Pais</th>
+                </tr>
+            </thead>
+            <tbody ui-sortable="vm.sortableList" class="apps-container" ng-model="vm.items['LIST_LEFT'].list" class="list">
+                <tr id="id-{{$index}}" ui-sortable-selectable ng-repeat="item in vm.items['LIST_LEFT'].list" class="item">
+                    <td>
+                        <input type="checkbox" name="listLeft" id="chk-{{$index}}" ng-model="item.$$selected" ng-change="vm.teste()">
+                    </td>
+                    <td>
+                        <div class="myHandle"></div>
+                        {{item.cidade}}
+                    </td>
+                    <td>{{item.estado}}</td>
+                    <td>{{item.pais}}</td>
+                    <th>
+                        <button class="btn btn-default" ng-click="vm.submitSingle(item, $index, 'LIST_LEFT')">-></button>
+                    </th>
+                </tr>
+            </tbody>
         </table>
         <div class="pull-left">
             <button class="btn btn-primary" ng-click="vm.distribute('LIST_LEFT')">Incluir</button>
         </div>
     </div>
-    
+
     <div class="col-md-6">
         <table class="table">
-            <tr>
-                <th>
-                    <input type="checkbox" ng-model="vm.items['LIST_RIGHT'].isSelectAll" ng-click="vm.toggleAll('LIST_RIGHT')">
-                </th>
-                <th>Cidade</th>
-                <th>Estado</th>
-                <th>Pais</th>
-                <th>Botão enviar</th>
-            </tr>
-            <tr ng-repeat="item in vm.items['LIST_RIGHT'].list">
-                <td>
-                    <input type="checkbox" name="listRight" id="chk-{{$index}}" ng-model="item.$$selected" ng-change="vm.setCheckboxSelectAll('LIST_RIGHT')">
-                </td>
-                <td>{{item.cidade}}</td>
-                <td>{{item.estado}}</td>
-                <td>{{item.pais}}</td>
-                <th>
-                    <button class="btn btn-default" ng-click="vm.submitSingle(item, $index, 'LIST_RIGHT')"> <- </button>
-                </th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" ng-model="vm.items['LIST_RIGHT'].isSelectAll" ng-click="vm.toggleAll('LIST_RIGHT')">
+                    </th>
+                    <th style="width: 150px">Cidade</th>
+                    <th>Estado</th>
+                    <th>Pais</th>
+                    <th>Botão enviar</th>
+                </tr>                
+            </thead>
+            <tbody ui-sortable="vm.sortableList" class="apps-container" ng-model="vm.items['LIST_RIGHT'].list" class="list">
+                <tr ui-sortable-selectable ng-repeat="item in vm.items['LIST_RIGHT'].list" class="item">
+                    <td>
+                        <input type="checkbox" name="listRight" id="chk-{{$index}}" ng-model="item.$$selected" ng-change="vm.setCheckboxSelectAll('LIST_RIGHT')">
+                    </td>
+                    <td>
+                        <div class="myHandle"></div>
+                        {{item.cidade}}
+                    </td>
+                    <td>{{item.estado}}</td>
+                    <td>{{item.pais}}</td>
+                    <th>
+                        <button class="btn btn-default" ng-click="vm.submitSingle(item, $index, 'LIST_RIGHT')"> <- </button>
+                    </th>
+                </tr>
+            </tbody>
         </table>
         <div class="text-right">
             <button class="btn btn-primary" ng-click="vm.distribute('LIST_RIGHT')">Incluir</button>

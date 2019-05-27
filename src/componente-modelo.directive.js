@@ -12,10 +12,7 @@ function ComponenteModeloDirective() {
         template: require('./componente-modelo.directive.html'),
         scope: {},
         controller: ComponenteModeloController,
-        controllerAs: 'vm',
-        link: function(scope, el, attrs, controller) {
-
-        }
+        controllerAs: 'vm'
     };
 }
 
@@ -37,8 +34,20 @@ var OTHER_TYPE_LIST = {
 
 var DEFAULT_LIST_STARTER = 'LIST_LEFT';
 
-ComponenteModeloController.$inject = ['pes-commponente.pes-componente.Service', 'promiseTracker', '$scope'];
-function ComponenteModeloController(Service, promiseTracker, $scope) {
+ComponenteModeloController.$inject = [
+    'pes-commponente.pes-componente.Service',
+    'promiseTracker',
+    '$scope',
+    'uiSortableMultiSelectionMethods',
+    '$element'
+];
+function ComponenteModeloController(
+    Service, 
+    promiseTracker, 
+    $scope, 
+    uiSortableMultiSelectionMethods, 
+    $element
+) {
     var vm = this;
     vm.loadingTracker = promiseTracker();
 
@@ -51,13 +60,45 @@ function ComponenteModeloController(Service, promiseTracker, $scope) {
     vm.setCheckboxSelectAll = setCheckboxSelectAll;
     vm.submitSingle = submitSingle;
 
-    function setCheckboxSelectAll(type) {
-        var selecionados = _.filter(vm.items[type].list, function(item) {
-            return item.$$selected;
-        })
+    console.log(uiSortableMultiSelectionMethods);
 
-        vm.items[type].isSelectAll = 
-            selecionados.length === vm.items[type].list.length;
+    function setCheckboxSelectAll(type) {
+        teste();
+        var selecionados = [];
+        _.forEach(vm.items[type].list, function(item, index) {
+            // teste();
+            // var el = $element.find('#id-1');
+            // var el = $element.find('#id-' + index);
+            // el.removeClass('ui-sortable-selected');
+
+            // el.addClass('ui-sortable-selected');
+            // if (item.$$selected) {
+            //     console.log('item selecionado');
+            //     el.addClass('ui-sortable-selected');
+            //     selecionados.push(item);
+            // }
+        });
+
+        // console.log('selecionados');
+        // console.log(selecionados);
+
+        /*
+        function teste(item, index) {
+        var el = $element.find('#id-1');
+        var el1 = $element.find('#id-2');
+        var el2 = $element.find('#id-3');
+        el.addClass('ui-sortable-selected');
+        el1.addClass('ui-sortable-selected');
+        el2.addClass('ui-sortable-selected');
+    }
+
+        function setChangeDraggable(item, index) {
+            var items
+        };
+        */
+
+        // vm.items[type].isSelectAll =
+        //     selecionados.length === vm.items[type].list.length;
     }
 
     function load() {
@@ -73,7 +114,7 @@ function ComponenteModeloController(Service, promiseTracker, $scope) {
             item.$$selected = vm.items[typeList].isSelectAll;
         })
     }
-    
+
     function distribute(typeList) {
         var otherTypeList = OTHER_TYPE_LIST[typeList];
 
@@ -84,11 +125,11 @@ function ComponenteModeloController(Service, promiseTracker, $scope) {
             item.$$selected ? otherList.push(item) : thisList.push(item);
             item.$$selected = false;
         })
-        
+
         setDefaltCheckboxList();
 
         vm.items[typeList].list = thisList;
-        vm.items[otherTypeList].list = vm.items[otherTypeList].list.concat(otherList);54
+        vm.items[otherTypeList].list = vm.items[otherTypeList].list.concat(otherList);
     }
 
     function setDefaltCheckboxList() {
@@ -105,8 +146,53 @@ function ComponenteModeloController(Service, promiseTracker, $scope) {
     }
 
 
-    $scope.getSelectedItemsIncluding = function(list, item) {
-        item.selected = true;
-        return list.items.filter(function(item) { return item.selected; });
-    };
+    // /*lógica do sortable*/
+    // vm.sortableList = {
+    //     // 'ui-floating': true,
+    //     // dropOnEmpty: true,
+    //     // items: '>*:not(.sort-disabled)',
+
+    //     handle: '>* .myHandle',
+    //     connectWith: ".apps-container"
+    // };
+
+    vm.sortableList = uiSortableMultiSelectionMethods.extendOptions({
+        // handle: '>* .myHandle',
+        // multiSelectOnClick: true
+        connectWith: ".apps-container",
+        'ui-selection-count': true
+    });
+
+    // $scope.sortableOptions = uiSortableMultiSelectionMethods.extendOptions({
+    //     stop: function (e, ui) {
+    //         // this callback has the changed model
+    //         var logEntry = tmpList.map(function (i) {
+    //             return i.value;
+    //         }).join(', ');
+    //         $scope.sortingLog.push('Stop: ' + logEntry);
+    //     },
+    //     'ui-selection-count': true
+    // });
+
+
+    //ele se baseia pela classe do item
+    vm.teste = teste;
+
+    function teste() {
+        var el = $element.find('#id-1');
+        var el1 = $element.find('#id-2');
+        var el2 = $element.find('#id-3');
+        el.addClass('ui-sortable-selected');
+        el1.addClass('ui-sortable-selected');
+        el2.addClass('ui-sortable-selected');
+    }
+
+    /*
+    - o que fazer
+    adicionar o tbody e lincar as listas;
+    
+
+
+
+    */
 }

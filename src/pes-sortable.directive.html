@@ -1,0 +1,39 @@
+<div>
+    <div >
+        <table>
+            <thead>
+              <tr>
+                  <th>Cidade</th>
+              </tr>
+            </thead>
+            <tbody ui-sortable ng-model="vm.items">
+              <tr ng-repeat="item in vm.items">
+                  <td>{{item.cidade}}</td>
+              </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<h2>ui.sortable event order</h2>
+
+  <div>
+    <ul ui-sortable ng-model="vm.items">
+      <li ng-repeat="item in vm.items">
+        {{item.cidade}}
+      </li>
+    </ul>
+  </div>
+
+  <!-- <div class="floatleft" style="margin-left: 20px;">
+    <ul class="list logList">
+      <li ng-repeat="entry in sortingLog track by $index" class="logItem">
+        {{entry}}
+      </li>
+    </ul>
+  </div> -->
+  
+  <div class="clear"></div>
