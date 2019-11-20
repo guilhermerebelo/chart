@@ -40,7 +40,7 @@
     "webpack-unused": "~0.1.0"
   },
   "dependencies": {
-    "angular": "~1.4",
+    "angular": "~1.7",
     "angular-promise-tracker": "^2.2.2",
     "angular-ui-sortable": "^0.18.0",
     "angular-ui-sortable-multiselection": "^0.7.0",
